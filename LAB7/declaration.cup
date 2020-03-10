@@ -1,0 +1,71 @@
+import java_cup.runtime.*;
+import java.util.*;
+
+init with {: :};
+
+action code {: Map<String,String> hash = new HashMap<String,String>(); :};
+
+scan with {: return getScanner().next_token(); :};
+terminal INT,STRING,COMMA,ID, SPACE, EOFILE,NL,EQ,QUOTE,STR,NIL,VAR,FLOAT,DECIMAL,SEMI,NUM;
+non terminal prog, stmt, decln, s,val, defn, intvarlist, floatvarlist, stringvarlist;
+s ::= prog {: System.out.println("Completed Parsing");System.exit(0); :} EOFILE {:System.exit(0);:} ;
+prog ::= prog stmt|stmt;
+stmt ::= decln
+	|SPACE
+	|NL;
+decln ::=  INT SPACE intvarlist SEMI | FLOAT SPACE floatvarlist SEMI | STRING SPACE stringvarlist SEMI;
+intvarlist  ::=  ID:e1 COMMA intvarlist {: 
+					if(hash.get(e1)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e1.toString(),"INT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:}
+			| ID:e2 {: 
+					if(hash.get(e2)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e2.toString(),"INT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:} | ID EQ NUM COMMA intvarlist | ID EQ NUM;
+floatvarlist  ::=  ID:e3 COMMA floatvarlist {: 
+					if(hash.get(e3)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e3.toString(),"FLOAT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:}
+			| ID:e4 {: 
+					if(hash.get(e4)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e4.toString(),"FLOAT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:} | ID EQ DECIMAL COMMA floatvarlist | ID EQ DECIMAL;
+						
+stringvarlist  ::=  ID:e5 COMMA stringvarlist {: 
+					if(hash.get(e5)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e5.toString(),"STRING");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:}
+			| ID:e6 {: 
+					if(hash.get(e6)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e6.toString(),"STRING");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:};
